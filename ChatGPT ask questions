@@ -1,0 +1,94 @@
+-- MySQL and ChaTGPT practice session --
+-- do you know MySQL? --
+-- Do you know that there are pre-loaded schemas in MySQL --
+-- Do you have information on their 'world' schema --
+-- Give me 5 easy example query questions from that schema, don't include the answer --
+
+-- List all countries in the continent of Europe. --
+-- Find the name and population of cities in the USA. --
+-- Retrieve the names of all languages spoken in Japan. --
+-- Get the name and government form of countries with a population greater than 50 million. --
+-- Find all cities in Germany with a population less than 1 million. --
+
+-- checking every table --
+SELECT * FROM city;
+SELECT * FROM Country;
+SELECT * FROM countrylanguage;
+
+-- Q1. List all countries in the continent of Europe. --
+SELECT name FROM country
+WHERE continent = 'Europe';
+
+-- Q2. Find the name and population of cities in the USA. --
+SELECT name, population FROM city
+WHERE countrycode = 'USA';
+
+-- Q3. Retrieve the names of all languages spoken in Japan. --
+SELECT language FROM countrylanguage
+WHERE Countrycode = 'JPN';
+
+-- Q4. Get the name and government form of countries with a population greater than 50 million. --
+SELECT name, governmentform FROM country
+WHERE population > 50000000;
+
+-- Q5. Find all cities in Germany with a population less than 1 million. --
+SELECT name FROM city
+WHERE countrycode = 'DEU'
+AND
+population < 1000000;
+
+-- Give me 5 intermediate questions from the same schema --
+-- Certainly! Here are five intermediate query questions based on the World schema: --
+-- Retrieve the name of the country with the highest population. --
+-- Find the top 10 countries with the largest surface area. --
+-- Get the average life expectancy for each continent. --
+-- List the languages spoken in each country along with the percentage of the population that speaks them. --
+-- Find the capital city of the country with the highest GNP per capita. 
+-- Certainly! Here are five intermediate query questions based on the World schema: --
+
+-- Q1. Retrieve the name of the country with the highest population. --
+SELECT name FROM country
+ORDER BY population DESC
+LIMIT 1;
+
+-- Q2. Find the top 10 countries with the largest surface area. --
+SELECT name FROM country
+ORDER BY SurfaceArea
+LIMIT 10;
+
+-- Q3. Get the average life expectancy for each continent. --
+SELECT continent , AVG(lifeexpectancy) FROM country
+GROUP BY continent;
+
+-- Q4. List the languages spoken in each country along with the percentage of the population that speaks them. --
+
+SELECT name Country, language, percentage FROM countrylanguage
+INNER JOIN country ON countrylanguage.countrycode = country.code;
+
+-- Q5. Find the capital city of the country with the highest GNP per capita. --
+
+-- I think I need to break down the question to answer this one --
+-- STEPS --
+-- find the highest GNP per capital of the country --
+SELECT name, GNP, capital, ROUND(GNP / capital, 2) AS GNPperCapital FROM country
+ORDER BY GNPperCapital DESC;
+
+-- find the city --
+SELECT city.name city_name, GNP, capital, ROUND(GNP / capital, 2) AS GNPperCapital FROM city
+INNER JOIN country ON city.countrycode = country.code
+ORDER BY GNPperCapital DESC
+LIMIT 1;
+
+-- I have this one wrong, the GNP per capital needs to be GNP / population, not GNP / Capital --
+-- Lesson Learned is to understand every column on the table and their purpose --
+-- Capital on the country table is city ID on the city table --
+
+-- Correct answer should be --
+SELECT city.name AS city_name, country.GNP, country.capital, 
+ROUND(country.GNP / country.population, 2) AS GNPperCapita 
+FROM city
+INNER JOIN country ON city.ID = country.capital
+ORDER BY GNPperCapita DESC
+LIMIT 1;
+
+-- This Ends the Easy and Intermediate query questions from ChatGPT, I will have a separate advance query question portfolio --
