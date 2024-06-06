@@ -38,4 +38,4 @@ WHERE ctpop.ctr < 2;
 
 -- will definitely get back to this as I learn more about SQL -- Thank you.
 
--- As I go along into these complex questions, I realized that complex questions doesnt mean you have to answer with complex statement --
+-- As I go along into these complex questions, I realized that complex questions doesnt mean you have to answer with complex statement, =) --
