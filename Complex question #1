@@ -1,0 +1,39 @@
+-- Find the cities with the highest population in each continent,
+-- including the name of the continent, the name of the country, and the population of the city. --
+
+-- utilized SUBQUERY and WINDOW FUNCTION --
+
+-- Analyze each table --
+SELECT * FROM city;
+SELECT * FROM country;
+
+-- analyze the joined table --
+SELECT * FROM country c
+JOIN city ct ON c.Code = ct.CountryCode;
+
+-- created a SELECT statement with Window function 
+-- this statement lets me select the required columns,
+-- I ranked them using row_num and over
+-- partitioned the row by continent and order by population of the city.
+
+SELECT ct.name city, continent,
+            c.name country,
+            ct.population,
+            row_number() OVER(partition by continent ORDER BY ct.population DESC) ctr
+			FROM country c
+			JOIN city ct ON c.Code = ct.CountryCode;
+
+-- In this final query, I selected all from the subquery,
+-- I dont know if I can simplify this even more, because the only thing that I added is WHERE clause at the end 
+-- it can be =1 or < 1, both return the rank 1 in terms of population.
+
+SELECT * FROM (
+			SELECT ct.name city, continent,
+            c.name country,
+            ct.population,
+            row_number() OVER(partition by continent ORDER BY ct.population DESC) ctr
+			FROM country c
+			JOIN city ct ON c.Code = ct.CountryCode) ctpop
+WHERE ctpop.ctr < 2;
+
+-- will definitely get back to this as I learn more about SQL -- Thank you.
